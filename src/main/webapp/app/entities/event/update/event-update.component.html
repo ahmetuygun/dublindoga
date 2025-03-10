@@ -1,0 +1,162 @@
+<div class="d-flex justify-content-center p-5">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-event-heading" data-cy="EventCreateUpdateHeading">Yeni Etkinlik Ekle veya Güncelle</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        @if (editForm.controls.id.value !== null) {
+        <div class="mb-3">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+        }
+
+        @let nameRef = editForm.get('name')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_name">Etkinlik Adı</label>
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+          @if (nameRef.invalid && (nameRef.dirty || nameRef.touched)) {
+          <div>
+            @if (editForm.get('name')?.errors?.required) {
+            <small class="form-text text-danger">Bu alan zorunludur.</small>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="mb-3 pt-3">
+          <label class="form-label">Açıklama</label>
+          <div class="NgxEditor__Wrapper" id="field_description">
+            <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"> </ngx-editor-menu>
+            <ngx-editor
+              style="display: block; min-height: 400px; max-height: 600px; overflow-y: auto;"
+              formControlName="description"
+              data-cy="description"
+              id="field_description"
+              [editor]="editor"
+              [disabled]="false"
+              [placeholder]="'Buraya yazın...'"
+            ></ngx-editor>
+          </div>
+        </div>
+
+        @let locationRef = editForm.get('location')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_location">Konum</label>
+          <input type="text" class="form-control" name="location" id="field_location" data-cy="location" formControlName="location" />
+          @if (locationRef.invalid && (locationRef.dirty || locationRef.touched)) {
+          <div>
+            @if (editForm.get('location')?.errors?.required) {
+            <small class="form-text text-danger">Bu alan zorunludur.</small>
+            }
+          </div>
+          }
+        </div>
+
+        @let dateRef = editForm.get('date')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_date">Tarih</label>
+          <div class="d-flex">
+            <input
+              id="field_date"
+              data-cy="date"
+              type="datetime-local"
+              class="form-control"
+              name="date"
+              formControlName="date"
+              placeholder="YYYY-AA-GG SS:DD"
+            />
+          </div>
+          @if (dateRef.invalid && (dateRef.dirty || dateRef.touched)) {
+          <div>
+            @if (editForm.get('date')?.errors?.required) {
+            <small class="form-text text-danger">Bu alan zorunludur.</small>
+            }
+            <small class="form-text text-danger" [hidden]="!editForm.get('date')?.errors?.datetimelocal"
+            >Lütfen geçerli bir tarih veya saat giriniz.</small
+            >
+          </div>
+          }
+        </div>
+
+        @let difficultyRef = editForm.get('difficulty')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_difficulty">Zorluk Seviyesi</label>
+          <select class="form-control" name="difficulty" formControlName="difficulty" id="field_difficulty" data-cy="difficulty">
+            <option [ngValue]="null"></option>
+            @for (difficulty of difficultyValues; track $index) {
+            <option [value]="difficulty">
+              {{ { null: '', EASY: 'Kolay', MEDIUM: 'Orta', HARD: 'Zor', EXTREME: 'Aşırı Zor' }[difficulty] }}
+            </option>
+            }
+          </select>
+          @if (difficultyRef.invalid && (difficultyRef.dirty || difficultyRef.touched)) {
+          <div>
+            @if (editForm.get('difficulty')?.errors?.required) {
+            <small class="form-text text-danger">Bu alan zorunludur.</small>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_limit">Katılımcı Limiti</label>
+          <input type="number" class="form-control" name="limit" id="field_limit" data-cy="limit" formControlName="limit" />
+        </div>
+
+        @let photo1Ref = editForm.get('photo1')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_photo1">Etkinlik Fotoğrafı</label>
+          <div>
+            @if (photo1Ref.value) {
+            <img
+              [src]="'data:' + editForm.get('photo1ContentType')!.value + ';base64,' + photo1Ref.value"
+              style="max-height: 100px"
+              alt="Etkinlik Fotoğrafı"
+            />
+            }
+            @if (photo1Ref.value) {
+            <div class="form-text text-danger clearfix">
+              <span class="pull-start">{{ editForm.get('photo1ContentType')!.value }}, {{ byteSize(photo1Ref.value!) }}</span>
+              <button
+                type="button"
+                (click)="clearInputImage('photo1', 'photo1ContentType', 'file_photo1')"
+                class="btn btn-secondary btn-xs pull-end"
+              >
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </div>
+            }
+            <input type="file" id="file_photo1" data-cy="photo1" (change)="setFileData($event, 'photo1', true)" accept="image/*" />
+          </div>
+          <input type="hidden" class="form-control" name="photo1" id="field_photo1" data-cy="photo1" formControlName="photo1" />
+          <input
+            type="hidden"
+            class="form-control"
+            name="photo1ContentType"
+            id="field_photo1ContentType"
+            formControlName="photo1ContentType"
+          />
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>İptal</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Kaydet</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity Event.
+    -->
+    <changeSet id="20250302171315-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="event_id"
+                                 baseTableName="rel_event__pending_joiner"
+                                 constraintName="fk_rel_event__pending_joiner__event_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="event"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="pending_joiner_id"
+                                 baseTableName="rel_event__pending_joiner"
+                                 constraintName="fk_rel_event__pending_joiner__pending_joiner_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="joiner"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="event_id"
+                                 baseTableName="rel_event__approved_joiner"
+                                 constraintName="fk_rel_event__approved_joiner__event_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="event"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="approved_joiner_id"
+                                 baseTableName="rel_event__approved_joiner"
+                                 constraintName="fk_rel_event__approved_joiner__approved_joiner_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="joiner"
+                                 />
+    </changeSet>
+</databaseChangeLog>

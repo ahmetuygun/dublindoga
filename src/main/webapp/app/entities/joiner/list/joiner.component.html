@@ -1,0 +1,167 @@
+<div class="p-5">
+  <h2 id="page-heading" data-cy="JoinerHeading">
+    <span>Joiners</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [animation]="isLoading ? 'spin' : undefined"></fa-icon>
+        <span>Listeyi yenile</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-joiner"
+        [routerLink]="['/joiner/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span>Yeni Joiner ekle</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  @if (joiners().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span>Joiners kaydi bulunamadi</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span>ID</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="fullName">
+              <div class="d-flex">
+                <span>Full Name</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="email">
+              <div class="d-flex">
+                <span>Email</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="phone">
+              <div class="d-flex">
+                <span>Phone</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="status">
+              <div class="d-flex">
+                <span>Status</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="photo1">
+              <div class="d-flex">
+                <span>Photo 1</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="gender">
+              <div class="d-flex">
+                <span>Gender</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="point">
+              <div class="d-flex">
+                <span>Point</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="internalUser.id">
+              <div class="d-flex">
+                <span>Internal User</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (joiner of joiners(); track trackId(joiner)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/joiner', joiner.id, 'view']">{{ joiner.id }}</a>
+              </td>
+              <td>{{ joiner.fullName }}</td>
+              <td>{{ joiner.email }}</td>
+              <td>{{ joiner.phone }}</td>
+              <td>{{ { null: '', PENDING: 'PENDING', CONFIRMED: 'CONFIRMED', CANCELLED: 'CANCELLED' }[joiner.status ?? 'null'] }}</td>
+              <td>
+                @if (joiner.photo1) {
+                  <a (click)="openFile(joiner.photo1, joiner.photo1ContentType)">
+                    <img [src]="'data:' + joiner.photo1ContentType + ';base64,' + joiner.photo1" style="max-height: 30px" alt="joiner" />
+                  </a>
+                  <span>{{ joiner.photo1ContentType }}, {{ byteSize(joiner.photo1) }}</span>
+                }
+              </td>
+              <td>{{ { null: '', MAN: 'MAN', WOMAN: 'WOMAN' }[joiner.gender ?? 'null'] }}</td>
+              <td>{{ joiner.point }}</td>
+              <td>
+                {{ joiner.internalUser?.id }}
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/joiner', joiner.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye"></fa-icon>
+                    <span class="d-none d-md-inline">Görüntüle</span>
+                  </a>
+
+                  <a [routerLink]="['/joiner', joiner.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt"></fa-icon>
+                    <span class="d-none d-md-inline">Düzenle</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(joiner)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times"></fa-icon>
+                    <span class="d-none d-md-inline">Sil</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (joiners().length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems"
+          [page]="page"
+          [pageSize]="itemsPerPage"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        ></ngb-pagination>
+      </div>
+    </div>
+  }
+</div>

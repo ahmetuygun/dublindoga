@@ -1,0 +1,69 @@
+{
+  "annotations": {
+    "changelogDate": "20250302171315"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "location",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "date",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "difficulty",
+      "fieldType": "Difficulty",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "EASY,MEDIUM,HARD,EXTREME"
+    },
+    {
+      "fieldName": "photo1",
+      "fieldType": "ImageBlob"
+    },
+    {
+      "fieldName": "photo2",
+      "fieldType": "ImageBlob"
+    },
+    {
+      "fieldName": "photo3",
+      "fieldType": "ImageBlob"
+    },
+    {
+      "fieldName": "limit",
+      "fieldType": "Integer"
+    }
+  ],
+  "name": "Event",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "joiner",
+      "otherEntityRelationshipName": "pendingEvents",
+      "relationshipName": "pendingJoiner",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityName": "joiner",
+      "otherEntityRelationshipName": "aprovedEvents",
+      "relationshipName": "approvedJoiner",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

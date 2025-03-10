@@ -1,0 +1,87 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (joiner(); as joinerRef) {
+      <div>
+        <h2 data-cy="joinerDetailsHeading"><span>Joiner</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ joinerRef.id }}</span>
+          </dd>
+          <dt><span>Full Name</span></dt>
+          <dd>
+            <span>{{ joinerRef.fullName }}</span>
+          </dd>
+          <dt><span>Email</span></dt>
+          <dd>
+            <span>{{ joinerRef.email }}</span>
+          </dd>
+          <dt><span>Phone</span></dt>
+          <dd>
+            <span>{{ joinerRef.phone }}</span>
+          </dd>
+          <dt><span>Status</span></dt>
+          <dd>
+            <span>{{ { null: '', PENDING: 'PENDING', CONFIRMED: 'CONFIRMED', CANCELLED: 'CANCELLED' }[joinerRef.status ?? 'null'] }}</span>
+          </dd>
+          <dt><span>Photo 1</span></dt>
+          <dd>
+            @if (joinerRef.photo1) {
+              <div>
+                <a (click)="openFile(joinerRef.photo1 ?? '', joinerRef.photo1ContentType)">
+                  <img [src]="'data:' + joinerRef.photo1ContentType + ';base64,' + joinerRef.photo1" style="max-width: 100%" alt="joiner" />
+                </a>
+                {{ joinerRef.photo1ContentType }}, {{ byteSize(joinerRef.photo1 ?? '') }}
+              </div>
+            }
+          </dd>
+          <dt><span>Gender</span></dt>
+          <dd>
+            <span>{{ { null: '', MAN: 'MAN', WOMAN: 'WOMAN' }[joinerRef.gender ?? 'null'] }}</span>
+          </dd>
+          <dt><span>Point</span></dt>
+          <dd>
+            <span>{{ joinerRef.point }}</span>
+          </dd>
+          <dt><span>Internal User</span></dt>
+          <dd>
+            <span>{{ joinerRef.internalUser?.id }}</span>
+          </dd>
+          <dt><span>Pending Events</span></dt>
+          <dd>
+            @for (pendingEvents of joinerRef.pendingEvents; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/event', pendingEvents.id, 'view']">{{ pendingEvents?.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+          <dt><span>Aproved Events</span></dt>
+          <dd>
+            @for (aprovedEvents of joinerRef.aprovedEvents; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/event', aprovedEvents.id, 'view']">{{ aprovedEvents?.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Geri</span>
+        </button>
+
+        <button type="button" [routerLink]="['/joiner', joinerRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Düzenle</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

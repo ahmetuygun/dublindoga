@@ -1,0 +1,54 @@
+entity Event {
+    name String required,
+    description String,
+    location String required,
+    date Instant required,
+    difficulty Difficulty required,
+    photo1 ImageBlob,
+    photo2 ImageBlob,
+    photo3 ImageBlob,
+    limit Integer
+}
+
+entity Joiner {
+    fullName String required,
+    email String required,
+    phone String,
+    status JoinStatus required,
+    photo1 ImageBlob,
+    gender Gender,
+    point Integer
+}
+
+enum Difficulty {
+    EASY,
+    MEDIUM,
+    HARD,
+    EXTREME
+}
+
+enum JoinStatus {
+    PENDING,
+    CONFIRMED,
+    CANCELLED
+}
+
+enum Gender {
+    MAN,
+    WOMAN
+}
+
+
+
+relationship ManyToMany {
+    Event{pendingJoiner} to Joiner{pendingEvents}
+    Event{approvedJoiner} to Joiner{aprovedEvents}
+}
+
+relationship OneToOne {
+    Joiner{internalUser} to User with builtInEntity
+}
+
+paginate Joiner,Event with pagination
+service * with serviceImpl
+

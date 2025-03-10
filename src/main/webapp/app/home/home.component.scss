@@ -1,0 +1,63 @@
+/* ==========================================================================
+Main page styles
+========================================================================== */
+
+.hipster {
+  display: inline-block;
+  width: 347px;
+  height: 497px;
+  background: url('../../content/images/jhipster_family_member_3.svg') no-repeat center top;
+  background-size: contain;
+}
+
+/* wait autoprefixer update to allow simple generation of high pixel density media query */
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and (-moz-min-device-pixel-ratio: 2),
+  only screen and (-o-min-device-pixel-ratio: 2/1),
+  only screen and (min-resolution: 192dpi),
+  only screen and (min-resolution: 2dppx) {
+  .hipster {
+    background: url('../../content/images/jhipster_family_member_3.svg') no-repeat center top;
+    background-size: contain;
+  }
+}
+.background-container {
+    position: relative;
+    background: url('../../content/images/dublin-doga-bg-1.jpg') no-repeat center center;
+    background-size: cover; /* Ensures it covers the full container */
+    height: 65vh; /* Keeps it at 65% of viewport height */
+    width: 100vw; /* Full width */
+    min-height: 400px; /* Ensures it doesn't become too small on short screens */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0; /* Remove negative padding */
+}
+
+/* Dark overlay without affecting text */
+.background-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Adjust opacity for darkness */
+  z-index: 1;
+}
+
+/* Ensure the content is above the overlay */
+.content-center {
+    position: relative;
+    z-index: 2;
+    background: none;
+    border-radius: 10px;
+    color: white;
+    padding: 5%;
+    margin-top: -30px; /* Moves content up */
+}
+
+
+
+

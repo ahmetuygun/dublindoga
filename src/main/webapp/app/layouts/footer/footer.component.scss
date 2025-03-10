@@ -1,0 +1,96 @@
+.footer {
+  background-color: #334d2b; /* Dark green */
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+  border-top: 2px solid #2b3c18;
+  width: 100%;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 20px;
+}
+
+/* First Row: Flexbox Layout */
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Ensures wrapping on smaller screens */
+  padding-bottom: 15px;
+  border-bottom: 1px solid #2b3c18;
+}
+
+/* Logo */
+.footer-logo .logo {
+  width: 80px;
+  height: auto;
+}
+
+
+
+/* Title & Description */
+.footer-description {
+  max-width: 500px;
+  text-align: left;
+}
+
+.footer-description h3 {
+  margin-bottom: 5px;
+}
+
+.footer-description p {
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Second Row: Menu Links */
+.footer-menu {
+  padding-top: 15px;
+}
+
+.footer-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.footer-menu ul li {
+  display: inline;
+}
+
+.footer-menu ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.footer-menu ul li a:hover {
+  color: lightgray;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .footer-row {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-logo {
+    margin-bottom: 10px;
+  }
+
+  .footer-description {
+    text-align: center;
+  }
+
+  .footer-menu ul {
+    gap: 10px;
+  }
+}
