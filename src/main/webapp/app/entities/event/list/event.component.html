@@ -2,6 +2,8 @@
   <h2  class="events-main pb-5 pt-5"  id="page-heading" data-cy="EventHeading">
 
     <span>Etkinlikler</span>
+    <fa-icon icon="sync"  *ngIf="isLoading" [animation]="isLoading ? 'spin' : undefined"></fa-icon>
+
     <div class="d-flex justify-content-end">
 
       <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading"  *jhiHasAnyAuthority="'ROLE_ADMIN'">
@@ -27,8 +29,8 @@
   <jhi-alert></jhi-alert>
 
   @if (events().length === 0) {
-    <div class="alert alert-warning" id="no-result">
-      <span>Events kaydi bulunamadi</span>
+    <div *ngIf="!isLoading"  class="alert alert-warning" id="no-result" >
+      <span >Events kaydi bulunamadi</span>
     </div>
   } @else {
     <div class="table-responsive table-entities" id="entities">

@@ -127,3 +127,16 @@
   color: white;
   border-color: #d9534f;
 }
+.skeleton-card {
+  width: 100%;
+  height: 120px; /* Adjust to match real card size */
+  background: #ddd;
+  border-radius: 8px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { background: #eee; }
+  50% { background: #ddd; }
+  100% { background: #eee; }
+}

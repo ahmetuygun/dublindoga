@@ -48,6 +48,8 @@ export class EventComponent implements OnInit {
   protected dataUtils = inject(DataUtils);
   protected modalService = inject(NgbModal);
   protected ngZone = inject(NgZone);
+  loading = false;
+
 
 
 trackId = (index: number, item: IEvent): number => {
@@ -56,6 +58,7 @@ trackId = (index: number, item: IEvent): number => {
 
 
   ngOnInit(): void {
+
     this.subscription = combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data])
       .pipe(
         tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
@@ -110,6 +113,7 @@ trackId = (index: number, item: IEvent): number => {
     this.fillComponentAttributesFromResponseHeader(response.headers);
     const dataFromBody = this.fillComponentAttributesFromResponseBody(response.body);
     this.events.set(dataFromBody);
+    this.loading = false;
   }
 
   protected fillComponentAttributesFromResponseBody(data: IEvent[] | null): IEvent[] {
