@@ -41,6 +41,7 @@ public class CacheConfiguration {
     @Bean
     public JCacheManagerCustomizer cacheManagerCustomizer() {
         return cm -> {
+            createCache(cm, "eventsCache");
             createCache(cm, com.hiking.dublindoga.repository.UserRepository.USERS_BY_LOGIN_CACHE);
             createCache(cm, com.hiking.dublindoga.repository.UserRepository.USERS_BY_EMAIL_CACHE);
             createCache(cm, com.hiking.dublindoga.domain.User.class.getName());
