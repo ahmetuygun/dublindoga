@@ -219,6 +219,7 @@ public class EventResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @CacheEvict(value = "eventsCache", allEntries = true)
     public ResponseEntity<Void> deleteEvent(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete Event : {}", id);
         eventService.delete(id);
