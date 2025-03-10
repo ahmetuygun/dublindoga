@@ -16,6 +16,8 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -57,6 +59,7 @@ public class EventResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @CacheEvict(value = "eventsCache", allEntries = true)
     public ResponseEntity<Event> createEvent(@Valid @RequestBody Event event) throws URISyntaxException {
         LOG.debug("REST request to save Event : {}", event);
         if (event.getId() != null) {
@@ -178,7 +181,9 @@ public class EventResource {
      * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of events in body.
      */
+
     @GetMapping("")
+    @Cacheable(value = "eventsCache") // Use "eventsCache" as the cache name
     public ResponseEntity<List<Event>> getAllEvents(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
         @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
