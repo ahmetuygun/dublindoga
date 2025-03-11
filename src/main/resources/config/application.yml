@@ -20,6 +20,8 @@ spring:
   config:
     activate:
       on-profile: '!api-docs'
+
+
 springdoc:
   api-docs:
     enabled: false
@@ -95,7 +97,7 @@ spring:
     name: dublindoga
   docker:
     compose:
-      enabled: true
+      enabled: false
       lifecycle-management: start-only
       file: src/main/docker/services.yml
   profiles:
@@ -139,6 +141,7 @@ spring:
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
   messages:
     basename: i18n/messages
+    encoding: UTF-8
   main:
     allow-bean-definition-overriding: true
   mvc:
@@ -199,7 +202,7 @@ jhipster:
   #   allow-credentials: true
   #   max-age: 1800
   mail:
-    from: dublindoga@localhost
+    from: info@originmaster.ie
   api-docs:
     default-include-pattern: /api/**
     management-include-pattern: /management/**

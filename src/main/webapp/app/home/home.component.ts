@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, signal, ElementRef, ViewChild } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -19,6 +19,9 @@ import { Account } from 'app/core/auth/account.model';
 export default class HomeComponent implements OnInit, OnDestroy {
   account = signal<Account | null>(null);
 
+  @ViewChild('eventSection') eventSection!: ElementRef;
+
+
   private readonly destroy$ = new Subject<void>();
 
   private readonly accountService = inject(AccountService);
@@ -35,6 +38,16 @@ export default class HomeComponent implements OnInit, OnDestroy {
     this.router.navigate(['/login']);
   }
 
+ scrollToEvents(): void {
+    this.eventSection.nativeElement.scrollIntoView({ behavior: 'smooth' });
+  }
+  navigateToLogin(): void {
+    this.router.navigate(['/login']);
+  }
+
+  navigateToRegister(): void {
+    this.router.navigate(['/account/register']);
+  }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

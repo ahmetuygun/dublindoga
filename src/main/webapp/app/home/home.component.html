@@ -5,15 +5,19 @@
     <p>İrlanda’da yaşayan Türk doğa tutkunlarının buluşma noktası.</p>
 
     <div>
-      <button class="btn btn-secondary btn-sm">Etkinlikler</button>
-      <button class="btn btn-primary btn-sm">Giriş Yap</button>
-      <button class="btn btn-secondary btn-sm">Kayıt Ol</button>
+      <button class="btn btn-secondary btn-sm" (click)="scrollToEvents()">Etkinlikler</button>
+      @if (account() === null) {
+
+      <button class="btn btn-primary btn-sm" (click)="navigateToLogin()">Giriş Yap</button>
+      <button class="btn btn-secondary btn-sm" (click)="navigateToRegister()">Kayıt Ol</button>
+
+      }
     </div>
   </div>
 
 </div>
 
 
-<div class="pb-4">
+<div #eventSection class="pb-4">
 <jhi-event></jhi-event>
 </div>

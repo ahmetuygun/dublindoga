@@ -15,7 +15,10 @@ const eventRoute: Routes = [
   },
   {
     path: ':id/view',
-    loadComponent: () => import('./detail/event-detail.component').then(m => m.EventDetailComponent)
+    loadComponent: () => import('./detail/event-detail.component').then(m => m.EventDetailComponent),
+    data: {
+        pageTitle: 'My Custom Home Title'  // Change this
+      }
   },
   {
     path: 'new',

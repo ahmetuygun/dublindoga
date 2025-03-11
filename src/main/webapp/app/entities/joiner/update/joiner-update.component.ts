@@ -133,6 +133,7 @@ ngOnInit(): void {
 
   protected onSaveSuccess(): void {
     this.previousState();
+    this.accountService.identity(true);
   }
 
   protected onSaveError(): void {

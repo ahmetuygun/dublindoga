@@ -72,6 +72,7 @@ public class EventResource {
     }
 
     @PostMapping("/addJoiner")
+    @CacheEvict(value = "eventSingle", key = "#addJoinerRequest.eventId")
     public ResponseEntity<Void> addJoiner(@Valid @RequestBody AddJoinerRequest addJoinerRequest) throws URISyntaxException, PendingJoinerListFullException {
         LOG.debug("REST request to addJoiner AddJoinerRequest : {}", addJoinerRequest);
         if (addJoinerRequest.getEventId() == null) {
@@ -82,6 +83,7 @@ public class EventResource {
     }
 
     @DeleteMapping("/{eventId}/joiners/{joinerId}")
+    @CacheEvict(value = "eventSingle", key = "#eventId")
     public ResponseEntity<String> removeJoiner(@PathVariable Long eventId, @PathVariable Long joinerId) {
         LOG.debug("REST request to addJoiner AddJoinerRequest : {}", joinerId);
         if (eventId == null) {
@@ -93,6 +95,7 @@ public class EventResource {
 
 
     @PostMapping("/{eventId}/approve/{joinerId}")
+    @CacheEvict(value = "eventSingle", key = "#eventId")
     public ResponseEntity<Void> approveJoiner(@PathVariable Long eventId, @PathVariable Long joinerId) {
         eventService.approveJoiner(eventId, joinerId);
         return ResponseEntity.ok().build();
@@ -100,6 +103,7 @@ public class EventResource {
 
 
     @DeleteMapping("/{eventId}/approved/{joinerId}")
+    @CacheEvict(value = "eventSingle", key = "#eventId")
     public ResponseEntity<Void> removeApprovedJoiner(@PathVariable Long eventId, @PathVariable Long joinerId) {
         eventService.removeApprovedJoiner(eventId, joinerId);
         return ResponseEntity.noContent().build();
@@ -206,6 +210,7 @@ public class EventResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the event, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @Cacheable(value = "eventSingle", key = "#id")// Use "eventsCache" as the cache name
     public ResponseEntity<Event> getEvent(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Event : {}", id);
         Optional<Event> event = eventService.findOne(id);

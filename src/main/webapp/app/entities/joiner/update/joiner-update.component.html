@@ -6,20 +6,11 @@
       <div>
         <jhi-alert-error></jhi-alert-error>
 
-        @if (editForm.controls.id.value !== null) {
-        <div class="mb-3">
-          <label class="form-label" for="field_id">Kulllanici Numarası (ID)</label>
-          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id"
-                 [readonly]="true"/>
-        </div>
-        }
-
-
 
         @let emailRef = editForm.get('email')!;
         <div class="mb-3">
           <label class="form-label" for="field_email">E-posta</label>
-          <input type="text" class="form-control" name="email" id="field_email" data-cy="email"
+          <input  type="text" class="form-control" name="email" id="field_email" data-cy="email" [readonly]="true"
                  formControlName="email" />
 
           @if (emailRef.invalid && (emailRef.dirty || emailRef.touched)) {
@@ -46,7 +37,7 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="field_phone">Telefon</label>
+          <label class="form-label" for="field_phone">Whatsapp Numarası</label>
           <input type="text" class="form-control" name="phone" id="field_phone" data-cy="phone"
                  formControlName="phone"/>
         </div>
