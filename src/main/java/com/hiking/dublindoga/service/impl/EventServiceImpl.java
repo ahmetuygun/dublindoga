@@ -179,7 +179,6 @@ public class EventServiceImpl implements EventService {
         }
         save(event);
         mailService.sendAttendanceApprovedMail(event, joiner );
-
     }
 
     @Override

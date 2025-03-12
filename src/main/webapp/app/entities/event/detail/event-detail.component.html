@@ -27,6 +27,8 @@
       <button (click)="openConfirmationModal(confirmModal)"
               class="btn btn-primary btn-lg"
               [disabled]="attendanceButtonDisabled || !accountService.isAuthenticated()">
+        <fa-icon  *ngIf="isLoading()"  icon="sync" [animation]="isLoading() ? 'spin' : undefined"></fa-icon>
+
         Katıl
       </button>
 

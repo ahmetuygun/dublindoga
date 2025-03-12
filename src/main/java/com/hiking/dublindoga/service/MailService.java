@@ -126,6 +126,7 @@ public class MailService {
         this.sendEmailFromTemplateSync(user, "mail/passwordResetEmail", "email.reset.title");
     }
 
+    @Async
     public void sendAttendanceApprovedMail(Event event, Joiner joiner) {
         log.debug("Sending Attendance Approved email to '{}', {}", joiner.getEmail(), event.getName());
         this.sendEmailFromTemplateSyncForEventNotification(joiner, event,"mail/attendanceApproved", "email.attendance.approval.title");

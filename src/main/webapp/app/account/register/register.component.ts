@@ -21,6 +21,8 @@ export default class RegisterComponent implements AfterViewInit {
   errorEmailExists = signal(false);
   errorUserExists = signal(false);
   success = signal(false);
+  isLoading = signal(false);
+
 
   registerForm = new FormGroup({
     login: new FormControl('', {
@@ -53,6 +55,7 @@ export default class RegisterComponent implements AfterViewInit {
   }
 
   register(): void {
+    this.isLoading.set(false); // Stop loading after successful login
     this.doNotMatch.set(false);
     this.error.set(false);
     this.errorEmailExists.set(false);
@@ -61,12 +64,23 @@ export default class RegisterComponent implements AfterViewInit {
     const { password, confirmPassword } = this.registerForm.getRawValue();
     if (password !== confirmPassword) {
       this.doNotMatch.set(true);
-    } else {
-      const { login, email } = this.registerForm.getRawValue();
-      this.registerService
-        .save({ login, email, password, langKey: 'tr' })
-        .subscribe({ next: () => this.success.set(true), error: response => this.processError(response) });
-    }
+   } else {
+     const { login, email } = this.registerForm.getRawValue();
+     this.isLoading.set(true); // Start loading before registration request
+     this.registerService
+       .save({ login, email, password, langKey: 'tr' })
+       .subscribe({
+         next: () => {
+           this.success.set(true);
+           this.isLoading.set(false); // Stop loading after successful registration
+         },
+         error: response => {
+           this.processError(response);
+           this.isLoading.set(false); // Stop loading in case of an error
+         },
+       });
+   }
+
   }
 
   private processError(response: HttpErrorResponse): void {

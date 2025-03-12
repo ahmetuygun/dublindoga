@@ -155,7 +155,9 @@
             }
           </div>
 
-          <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary" data-cy="submit">Kayıt Ol</button>
+          <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary" data-cy="submit">
+            <fa-icon  *ngIf="isLoading()"  icon="sync" [animation]="isLoading() ? 'spin' : undefined"></fa-icon>
+            Kayıt Ol</button>
         </form>
       }
 

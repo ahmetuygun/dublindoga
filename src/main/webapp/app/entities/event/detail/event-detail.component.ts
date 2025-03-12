@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit , signal} from '@angular/core';
 import SharedModule from 'app/shared/shared.module';
 import { FormatMediumDatetimePipe, FormatMediumDatePipe } from 'app/shared/date';
 import { DataUtils } from 'app/core/util/data-util.service';
@@ -34,6 +34,8 @@ export class EventDetailComponent implements OnInit {
   attendanceStatusMessage: string = "";
   attendanceButtonDisabled: boolean = false;
   showConfirmation: boolean = false; // Controls visibility of confirmation modal
+  isLoading = signal(false);
+
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -59,6 +61,8 @@ export class EventDetailComponent implements OnInit {
         if (response.body) {
           this.event = response.body;
           this.processButtonStatus()// Store event data
+         this.isLoading.set(false); // Start loading before registration request
+
         }
       },
       error: (err) => {
@@ -98,6 +102,7 @@ export class EventDetailComponent implements OnInit {
       alert('Event ID is missing.');
       return;
     }
+     this.isLoading.set(true); // Start loading before registration request
 
     const eventId = this.event.id;
 
@@ -107,11 +112,12 @@ export class EventDetailComponent implements OnInit {
           this.eventService.addJoiner(eventId, account.joiner.id).subscribe({
             next: () => {
               console.log('Joiner added successfully!');
-              this.fillTheEvent(); // Refresh event data after join
+              this.fillTheEvent();
             },
             error: (err) => {
               console.error('Error adding joiner:', err);
               alert('Failed to join the event. Please try again.');
+             this.isLoading.set(false); // Start loading before registration request
             }
           });
         } else {

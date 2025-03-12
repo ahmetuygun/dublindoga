@@ -15,6 +15,7 @@ export default class LoginComponent implements OnInit, AfterViewInit {
   username = viewChild.required<ElementRef>('username');
 
   authenticationError = signal(false);
+  isLoading = signal(false);
 
   loginForm = new FormGroup({
     username: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
@@ -27,6 +28,7 @@ export default class LoginComponent implements OnInit, AfterViewInit {
   private readonly router = inject(Router);
 
   ngOnInit(): void {
+
     // if already authenticated then navigate to home page
     this.accountService.identity().subscribe(() => {
       if (this.accountService.isAuthenticated()) {
@@ -39,23 +41,30 @@ export default class LoginComponent implements OnInit, AfterViewInit {
     this.username().nativeElement.focus();
   }
 
-  login(): void {
-    this.loginService.login(this.loginForm.getRawValue()).subscribe({
-      next: () => {
-        this.authenticationError.set(false);
-              this.accountService.identity().subscribe(account => {
-                console.log(account)
-                  if (account?.joiner === null) {
-                    this.router.navigate(['/joiner/new']);
-                  }
-                });
-
-        if (!this.router.getCurrentNavigation()) {
-          // There were no routing during login (eg from navigationToStoredUrl)
-          this.router.navigate(['']);
+login(): void {
+  this.isLoading.set(true);
+  this.loginService.login(this.loginForm.getRawValue()).subscribe({
+    next: () => {
+      this.authenticationError.set(false);
+      this.accountService.identity().subscribe(account => {
+        console.log(account);
+        if (account?.joiner === null) {
+          this.router.navigate(['/joiner/new']);
         }
-      },
-      error: () => this.authenticationError.set(true),
-    });
-  }
+      });
+
+      if (!this.router.getCurrentNavigation()) {
+        // There were no routing during login (eg from navigationToStoredUrl)
+        this.router.navigate(['']);
+      }
+
+      this.isLoading.set(false); // Stop loading after successful login
+    },
+    error: () => {
+      this.authenticationError.set(true);
+      this.isLoading.set(false); // Stop loading in case of an error
+    },
+  });
 }
+}
+

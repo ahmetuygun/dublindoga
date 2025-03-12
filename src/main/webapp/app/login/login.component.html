@@ -41,7 +41,9 @@
           </label>
         </div>
 
-        <button type="submit" class="btn btn-primary" data-cy="submit">Giriş</button>
+        <button type="submit" class="btn btn-primary" data-cy="submit">
+          <fa-icon  *ngIf="isLoading()"  icon="sync" [animation]="isLoading() ? 'spin' : undefined"></fa-icon>
+          Giriş</button>
       </form>
       <div class="mt-3 alert alert-warning">
         <a class="alert-link" routerLink="/account/reset/request" data-cy="forgetYourPasswordSelector">Şifreni mi unuttun?</a>
