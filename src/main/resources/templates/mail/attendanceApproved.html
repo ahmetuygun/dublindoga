@@ -1,0 +1,25 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="#{email.attendance.approval.title}">Katılım Onayı</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="icon" th:href="@{|${baseUrl}/favicon.ico|}" />
+</head>
+<body>
+<p th:text="#{email.attendance.greeting(${joiner.fullName})}">Sevgili</p>
+
+<p th:text="#{email.attendance.text1}">Katılım talebiniz aşağıdaki etkinlik için onaylanmıştır:</p>
+
+<p><strong th:text="#{email.attendance.event.name}">Etkinlik Adı:</strong> <span th:text="${event.name}"></span></p>
+<p><strong th:text="#{email.attendance.event.description}">Açıklama:</strong> <span th:utext="${event.description}"></span></p>
+<p><strong th:text="#{email.attendance.event.location}">Konum:</strong> <span th:text="${event.location}"></span></p>
+<p><strong th:text="#{email.attendance.event.date}">Tarih:</strong> <span th:text="${#temporals.format(event.date, 'dd MMM yyyy HH:mm')}"/></p>
+
+<p th:text="#{email.attendance.text2}">Sizi orada görmek için sabırsızlanıyoruz!</p>
+
+<p>
+  <em th:text="#{email.sender}">Ekibiniz</em>
+</p>
+</body>
+</html>

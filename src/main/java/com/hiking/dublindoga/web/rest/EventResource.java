@@ -122,6 +122,7 @@ public class EventResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @CacheEvict(value = "eventSingle", key = "#id")
     public ResponseEntity<Event> updateEvent(@PathVariable(value = "id", required = false) final Long id, @Valid @RequestBody Event event)
         throws URISyntaxException {
         LOG.debug("REST request to update Event : {}, {}", id, event);
@@ -154,6 +155,7 @@ public class EventResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @CacheEvict(value = "eventSingle", key = "#id")
     public ResponseEntity<Event> partialUpdateEvent(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody Event event

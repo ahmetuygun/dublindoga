@@ -132,7 +132,7 @@ trackId = (index: number, item: IEvent): number => {
     const queryObject: any = {
       page: pageToLoad - 1,
       size: this.itemsPerPage,
-      eagerload: true,
+      eagerload: false,
       sort: this.sortService.buildSortParam(this.sortState()),
     };
     return this.eventService.query(queryObject).pipe(tap(() => (this.isLoading = false)));

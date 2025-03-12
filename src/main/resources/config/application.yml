@@ -21,6 +21,10 @@ spring:
     activate:
       on-profile: '!api-docs'
 
+server:
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
 
 springdoc:
   api-docs:

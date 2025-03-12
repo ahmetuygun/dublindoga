@@ -1,5 +1,7 @@
 package com.hiking.dublindoga.service;
 
+import com.hiking.dublindoga.domain.Event;
+import com.hiking.dublindoga.domain.Joiner;
 import com.hiking.dublindoga.domain.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -25,9 +27,13 @@ import tech.jhipster.config.JHipsterProperties;
 @Service
 public class MailService {
 
+    private static final String JOINER = "joiner";
     private final Logger log = LoggerFactory.getLogger(MailService.class);
 
     private static final String USER = "user";
+
+    private static final String EVENT = "event" ;
+
 
     private static final String BASE_URL = "baseUrl";
 
@@ -101,6 +107,8 @@ public class MailService {
     }
 
 
+
+
     public void sendActivationEmail(User user) {
         log.debug("Sending activation email to '{}'", user.getEmail());
         this.sendEmailFromTemplateSync(user, "mail/activationEmail", "email.activation.title");
@@ -118,4 +126,28 @@ public class MailService {
         this.sendEmailFromTemplateSync(user, "mail/passwordResetEmail", "email.reset.title");
     }
 
+    public void sendAttendanceApprovedMail(Event event, Joiner joiner) {
+        log.debug("Sending Attendance Approved email to '{}', {}", joiner.getEmail(), event.getName());
+        this.sendEmailFromTemplateSyncForEventNotification(joiner, event,"mail/attendanceApproved", "email.attendance.approval.title");
+
+
+    }
+
+    private void sendEmailFromTemplateSyncForEventNotification(Joiner joiner, Event event, String templateName, String titleKey) {
+
+        if (joiner.getEmail() == null) {
+            log.debug("Email doesn't exist for user '{}'", joiner.getEmail());
+            return;
+        }
+        Locale locale = Locale.forLanguageTag("en");
+        Context context = new Context(locale);
+        context.setVariable(EVENT, event);
+        context.setVariable(JOINER, joiner);
+
+        context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
+        String content = templateEngine.process(templateName, context);
+        String subject = messageSource.getMessage(titleKey, null, locale);
+        this.sendEmailSync(joiner.getInternalUser().getEmail(), subject, content, false, true);
+
+    }
 }

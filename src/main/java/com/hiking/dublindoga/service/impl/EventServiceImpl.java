@@ -3,7 +3,6 @@ package com.hiking.dublindoga.service.impl;
 import com.hiking.dublindoga.domain.AddJoinerRequest;
 import com.hiking.dublindoga.domain.Event;
 import com.hiking.dublindoga.domain.Joiner;
-import com.hiking.dublindoga.domain.User;
 import com.hiking.dublindoga.repository.EventRepository;
 import com.hiking.dublindoga.repository.JoinerRepository;
 import com.hiking.dublindoga.repository.UserRepository;
@@ -11,6 +10,8 @@ import com.hiking.dublindoga.service.EventService;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import com.hiking.dublindoga.service.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -33,11 +34,15 @@ public class EventServiceImpl implements EventService {
 
     private final JoinerRepository joinerRepository;
 
+    private final MailService mailService;
 
-    public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository, JoinerRepository joinerRepository) {
+
+
+    public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository, JoinerRepository joinerRepository, MailService mailService) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.joinerRepository = joinerRepository;
+        this.mailService = mailService;
     }
 
     @Override
@@ -173,6 +178,7 @@ public class EventServiceImpl implements EventService {
             event.addApprovedJoiner(joiner);
         }
         save(event);
+        mailService.sendAttendanceApprovedMail(event, joiner );
 
     }
 
