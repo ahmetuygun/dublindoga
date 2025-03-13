@@ -17,16 +17,15 @@
       <!-- Right Side: Title & Description -->
       <div class="footer-description">
         <h3>Dublin Doğa</h3>
-        <p>Doğa yürüyüşleri ve doğa severler için bir topluluk. Yeni yerler keşfetmek ve doğayla iç içe olmak isteyen herkes için!</p>
-      </div>
+        <p>Doğa yürüyüşleri ve keşif tutkunları için bir topluluk! Yeni yerler keşfetmek, doğayla iç içe olmak ve doğaseverlerle keyifli anlar paylaşmak isteyen herkes davetli! 🌿✨</p>      </div>
     </div>
 
     <!-- Second Row: Links -->
     <div class="footer-menu">
       <ul>
-        <li><a href="/login">Giriş</a></li>
-        <li><a href="/register">Kaydol</a></li>
-        <li><a href="/settings">Ayarlar</a></li>
+        <li><a (click)="navigateToLogin()" >Giriş</a></li>
+        <li><a (click)="navigateToRegister()" >Kaydol</a></li>
+        <li><a (click)="navigateToSettings()">Ayarlar</a></li>
       </ul>
     </div>
 

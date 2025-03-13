@@ -31,7 +31,7 @@ const routes: Routes = [
   {
     path: 'login',
     loadComponent: () => import('./login/login.component'),
-    title: 'login.title',
+    title: 'Giris',
   },
   {
     path: '',
