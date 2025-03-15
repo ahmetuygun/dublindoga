@@ -105,11 +105,18 @@
             <ul *ngIf="event?.pendingJoiners?.length; else noApproved">
               <li *ngFor="let joiner of event?.pendingJoiners" class="joiner-item">
                 <img
-                  *ngIf="joiner.photo1"
+                  *ngIf="joiner.photo1; else defaultPhoto"
                   [src]="'data:' + joiner.photo1ContentType + ';base64,' + joiner.photo1"
                   alt="{{ joiner.fullName }}"
                   class="joiner-photo"
                 />
+                <ng-template #defaultPhoto>
+                  <img
+                    src="content/images/default-profile.png"
+                    alt="Default Profile"
+                    class="joiner-photo"
+                  />
+                </ng-template>
                 <span>{{ maskName(joiner.fullName) }}</span>
 
                 <!-- Approval and Removal Buttons -->
@@ -138,11 +145,19 @@
             <ul *ngIf="event?.approvedJoiners?.length; else noApproved">
               <li *ngFor="let joiner of event?.approvedJoiners" class="joiner-item">
                 <img
-                  *ngIf="joiner.photo1"
+                  *ngIf="joiner.photo1; else defaultPhoto"
                   [src]="'data:' + joiner.photo1ContentType + ';base64,' + joiner.photo1"
                   alt="{{ joiner.fullName }}"
                   class="joiner-photo"
                 />
+                <ng-template #defaultPhoto>
+                  <img
+                    src="content/images/default-profile.png"
+                    alt="Default Profile"
+                    class="joiner-photo"
+                  />
+                </ng-template>
+
                 <span>{{ maskName(joiner.fullName) }}</span>
 
                 <!-- Remove from Approved List -->

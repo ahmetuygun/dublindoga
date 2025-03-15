@@ -12,6 +12,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import com.hiking.dublindoga.service.MailService;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -164,22 +165,26 @@ public class EventServiceImpl implements EventService {
 
     }
 
+    @Transactional
     @Override
     public void approveJoiner(Long eventId, Long joinerId) {
-
         Event event = findOne(eventId)
             .orElseThrow(() -> new NoSuchElementException("Event not found with id: " + eventId));
 
         Joiner joiner = joinerRepository.findById(joinerId)
             .orElseThrow(() -> new NoSuchElementException("Joiner not found with id: " + joinerId));
 
-        if(event.getPendingJoiners().contains(joiner)){
+        // Initialize the collection to avoid LazyInitializationException
+        Hibernate.initialize(event.getPendingJoiners());
+
+        if (event.getPendingJoiners().contains(joiner)) {
             event.removePendingJoiner(joiner);
             event.addApprovedJoiner(joiner);
         }
         save(event);
-        mailService.sendAttendanceApprovedMail(event, joiner );
+        mailService.sendAttendanceApprovedMail(event, joiner);
     }
+
 
     @Override
     public void removeApprovedJoiner(Long eventId, Long joinerId) {
