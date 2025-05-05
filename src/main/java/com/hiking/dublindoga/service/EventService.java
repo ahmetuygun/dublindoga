@@ -4,10 +4,12 @@ import com.hiking.dublindoga.domain.AddJoinerRequest;
 import com.hiking.dublindoga.domain.Event;
 import java.util.Optional;
 
+import com.hiking.dublindoga.domain.JoinStatus;
 import com.hiking.dublindoga.service.impl.PendingJoinerListFullException;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Interface for managing {@link com.hiking.dublindoga.domain.Event}.
@@ -75,4 +77,6 @@ public interface EventService {
     void approveJoiner(Long eventId, Long joinerId);
 
     void removeApprovedJoiner(Long eventId, Long joinerId);
+
+    Optional<JoinStatus> checkAttendance(Long eventId, Long joinerId);
 }

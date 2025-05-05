@@ -44,12 +44,6 @@ public class Joiner implements Serializable {
     @Column(name = "status", nullable = false)
     private JoinStatus status;
 
-    @Lob
-    @Column(name = "photo_1")
-    private byte[] photo1;
-
-    @Column(name = "photo_1_content_type")
-    private String photo1ContentType;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
@@ -139,31 +133,7 @@ public class Joiner implements Serializable {
         this.status = status;
     }
 
-    public byte[] getPhoto1() {
-        return this.photo1;
-    }
 
-    public Joiner photo1(byte[] photo1) {
-        this.setPhoto1(photo1);
-        return this;
-    }
-
-    public void setPhoto1(byte[] photo1) {
-        this.photo1 = photo1;
-    }
-
-    public String getPhoto1ContentType() {
-        return this.photo1ContentType;
-    }
-
-    public Joiner photo1ContentType(String photo1ContentType) {
-        this.photo1ContentType = photo1ContentType;
-        return this;
-    }
-
-    public void setPhoto1ContentType(String photo1ContentType) {
-        this.photo1ContentType = photo1ContentType;
-    }
 
     public Gender getGender() {
         return this.gender;
@@ -294,8 +264,6 @@ public class Joiner implements Serializable {
             ", email='" + getEmail() + "'" +
             ", phone='" + getPhone() + "'" +
             ", status='" + getStatus() + "'" +
-            ", photo1='" + getPhoto1() + "'" +
-            ", photo1ContentType='" + getPhoto1ContentType() + "'" +
             ", gender='" + getGender() + "'" +
             ", point=" + getPoint() +
             "}";

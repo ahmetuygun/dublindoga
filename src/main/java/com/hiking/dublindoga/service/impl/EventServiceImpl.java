@@ -2,6 +2,7 @@ package com.hiking.dublindoga.service.impl;
 
 import com.hiking.dublindoga.domain.AddJoinerRequest;
 import com.hiking.dublindoga.domain.Event;
+import com.hiking.dublindoga.domain.JoinStatus;
 import com.hiking.dublindoga.domain.Joiner;
 import com.hiking.dublindoga.repository.EventRepository;
 import com.hiking.dublindoga.repository.JoinerRepository;
@@ -17,11 +18,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link com.hiking.dublindoga.domain.Event}.
+ * Service Implementation for managing {@link Event}.
  */
 @Service
 @Transactional
@@ -118,11 +120,15 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findAllWithEagerRelationships(pageable);
     }
 
-    @Override
-    @Transactional(readOnly = true)
     public Optional<Event> findOne(Long id) {
         LOG.debug("Request to get Event : {}", id);
-        return eventRepository.findOneWithEagerRelationships(id);
+        if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+            .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"))) {
+           return eventRepository.findOneWithEagerRelationships(id);
+        } else {
+            return eventRepository.findById(id);
+
+        }
     }
 
     @Override
@@ -200,5 +206,19 @@ public class EventServiceImpl implements EventService {
             event.addPendingJoiner(joiner);
         }
         save(event);
+    }
+
+    @Override
+    public Optional<JoinStatus> checkAttendance(Long eventId, Long joinerId) {
+
+        boolean approved = false;
+        boolean pending = false;
+        pending = eventRepository.existsPendingJoinerForEvent(eventId, joinerId);
+
+        if(!pending){
+            approved =  eventRepository.existsApprovedJoinerForEvent(eventId, joinerId);
+        }
+
+        return Optional.of(new JoinStatus(approved,pending));
     }
 }

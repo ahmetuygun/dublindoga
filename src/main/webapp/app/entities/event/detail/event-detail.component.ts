@@ -32,18 +32,20 @@ export class EventDetailComponent implements OnInit {
   ) {}
 
   attendanceStatusMessage: string = "";
-  attendanceButtonDisabled: boolean = false;
+  attendanceButtonInProgress: boolean = false;
+  attendanceButtonDisabled: boolean = true;
   showConfirmation: boolean = false; // Controls visibility of confirmation modal
   isLoading = signal(false);
 
 
   ngOnInit(): void {
+    this.isLoading.set(true); // Start loading before registration request
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
         this.eventId = +id; // Convert string to number
         this.fillTheEvent(); // Fetch event details
-        this.processButtonStatus();
+
       } else {
         console.error("Event ID is missing from the route.");
       }
@@ -56,46 +58,74 @@ export class EventDetailComponent implements OnInit {
       return;
     }
 
-    this.eventService.find(this.eventId).subscribe({
-      next: (response) => {
-        if (response.body) {
-          this.event = response.body;
-          this.processButtonStatus()// Store event data
-         this.isLoading.set(false); // Start loading before registration request
+    if (this.accountService.hasAnyAuthority(['ROLE_ADMIN'])) {
 
+      this.eventService.findForAdmin(this.eventId).subscribe({
+        next: (response) => {
+          if (response.body) {
+            this.event = response.body;
+            this.isLoading.set(false); // Start loading before registration request
+          }
+        },
+        error: (err) => {
+          console.error("Error fetching event details:", err);
         }
-      },
-      error: (err) => {
-        console.error("Error fetching event details:", err);
-      }
-    });
+      });
+    }else{
+      this.eventService.find(this.eventId).subscribe({
+        next: (response) => {
+          if (response.body) {
+            this.event = response.body;
+            this.processButtonStatus();
+
+            this.isLoading.set(false); // Start loading before registration request
+          }
+        },
+        error: (err) => {
+          console.error("Error fetching event details:", err);
+        }
+      });
+    }
+
   }
 
   processButtonStatus(): void {
-    this.accountService.identity().subscribe(account => {
-      if (account?.id && account?.joiner) {
-        if (this.event) {
-          const isPending = this.event.pendingJoiners?.some(j => j.id === account?.joiner?.id);
-          const isApproved = this.event.approvedJoiners?.some(j => j.id === account?.joiner?.id);
+    this.isLoading.set(true); // Start loading before registration request
 
-          if (isPending) {
-            this.attendanceStatusMessage = "Bekleme Listesindesiniz";
-            this.attendanceButtonDisabled = true;
-          } else if (isApproved) {
-            this.attendanceStatusMessage = "Bu etkinliğe katılıyorsunuz";
-            this.attendanceButtonDisabled = true;
-          }else if ((this.event?.pendingJoiners?.length ?? 0) > (this.event?.limit ?? 0) * 2) {
-             this.attendanceStatusMessage = "Bu etkinlik için katılım kontenjanı doldu!.";
-             this.attendanceButtonDisabled = true;
-           }
-          else {
+    this.accountService.identity().subscribe(account => {
+      if (account?.id && account?.joiner && this.event?.id) {
+        console.info("processButton -> ", account);
+
+        this.eventService.checkAttendance(this.event.id, account.joiner.id).subscribe({
+          next: response => {
+            console.info("processButton 2 -> ", account);
+
+            const status = response.body;
+            if (status?.pending) {
+              this.attendanceStatusMessage = "Bekleme Listesindesiniz";
+              this.attendanceButtonDisabled = true;
+            } else if (status?.approved) {
+              this.attendanceStatusMessage = "Bu etkinliğe katılıyorsunuz";
+              this.attendanceButtonDisabled = true;
+            } else {
+              this.attendanceStatusMessage = "";
+              this.attendanceButtonDisabled = false;
+            }
+            this.isLoading.set(false); // Start loading before registration request
+
+          },
+          error: err => {
+            console.error("Katılım durumu alınamadı", err);
             this.attendanceStatusMessage = "";
             this.attendanceButtonDisabled = false;
+            this.isLoading.set(false); // Start loading before registration request
+
           }
-        }
+        });
       }
     });
   }
+
 
   addJoiner(): void {
     if (!this.event || !this.event.id) {
@@ -112,7 +142,9 @@ export class EventDetailComponent implements OnInit {
           this.eventService.addJoiner(eventId, account.joiner.id).subscribe({
             next: () => {
               console.log('Joiner added successfully!');
-              this.fillTheEvent();
+              this.attendanceStatusMessage = "Bekleme Listesindesiniz";
+              this.attendanceButtonDisabled = true;
+              this.isLoading.set(false); // Start loading before registration request
             },
             error: (err) => {
               console.error('Error adding joiner:', err);
@@ -145,7 +177,6 @@ export class EventDetailComponent implements OnInit {
           this.eventService.removeJoiner(eventId, account.id).subscribe({
             next: () => {
               console.log('Joiner removed successfully!');
-              this.fillTheEvent(); // Refresh event data after removal
             },
             error: (err) => {
               console.error('Error removing joiner:', err);
@@ -236,7 +267,6 @@ approveJoiner(joinerId: number): void {
   this.eventService.approveJoiner(this.event.id, joinerId).subscribe({
     next: () => {
       console.log(`Joiner ${joinerId} approved successfully!`);
-      this.fillTheEvent(); // Refresh event details after approval
     },
     error: (err) => {
       console.error('Error approving joiner:', err);

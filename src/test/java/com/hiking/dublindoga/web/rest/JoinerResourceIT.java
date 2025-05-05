@@ -96,8 +96,6 @@ class JoinerResourceIT {
             .email(DEFAULT_EMAIL)
             .phone(DEFAULT_PHONE)
             .status(DEFAULT_STATUS)
-            .photo1(DEFAULT_PHOTO_1)
-            .photo1ContentType(DEFAULT_PHOTO_1_CONTENT_TYPE)
             .gender(DEFAULT_GENDER)
             .point(DEFAULT_POINT);
     }
@@ -114,8 +112,6 @@ class JoinerResourceIT {
             .email(UPDATED_EMAIL)
             .phone(UPDATED_PHONE)
             .status(UPDATED_STATUS)
-            .photo1(UPDATED_PHOTO_1)
-            .photo1ContentType(UPDATED_PHOTO_1_CONTENT_TYPE)
             .gender(UPDATED_GENDER)
             .point(UPDATED_POINT);
     }
@@ -288,8 +284,6 @@ class JoinerResourceIT {
             .email(UPDATED_EMAIL)
             .phone(UPDATED_PHONE)
             .status(UPDATED_STATUS)
-            .photo1(UPDATED_PHOTO_1)
-            .photo1ContentType(UPDATED_PHOTO_1_CONTENT_TYPE)
             .gender(UPDATED_GENDER)
             .point(UPDATED_POINT);
 
@@ -370,8 +364,6 @@ class JoinerResourceIT {
         partialUpdatedJoiner
             .email(UPDATED_EMAIL)
             .phone(UPDATED_PHONE)
-            .photo1(UPDATED_PHOTO_1)
-            .photo1ContentType(UPDATED_PHOTO_1_CONTENT_TYPE)
             .gender(UPDATED_GENDER)
             .point(UPDATED_POINT);
 
@@ -406,8 +398,6 @@ class JoinerResourceIT {
             .email(UPDATED_EMAIL)
             .phone(UPDATED_PHONE)
             .status(UPDATED_STATUS)
-            .photo1(UPDATED_PHOTO_1)
-            .photo1ContentType(UPDATED_PHOTO_1_CONTENT_TYPE)
             .gender(UPDATED_GENDER)
             .point(UPDATED_POINT);
 

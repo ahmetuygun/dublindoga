@@ -14,12 +14,6 @@
     <div class="event-meta">
       <p><strong>📍 Etkinlik Yeri:</strong> {{ event?.location }}</p>
       <p><strong>📅 Tarih:</strong> {{ event?.date | formatMediumDate }}</p>
-      <p><strong>🔹 Zorluk Seviyesi:</strong>
-        <span [ngClass]="getDifficultyClass(event?.difficulty ?? '')">
-  {{ getDifficultyText(event?.difficulty ?? '') }}
-</span>
-
-      </p>
       <p><strong>👥 Limit:</strong> {{ event?.limit }}</p>
     </div>
 
@@ -28,7 +22,6 @@
               class="btn btn-primary btn-lg"
               [disabled]="attendanceButtonDisabled || !accountService.isAuthenticated()">
         <fa-icon  *ngIf="isLoading()"  icon="sync" [animation]="isLoading() ? 'spin' : undefined"></fa-icon>
-
         Katıl
       </button>
 
@@ -89,7 +82,7 @@
       <div class="event-description-content" [innerHTML]="sanitizeHtml(event?.description)"></div>
     </div>
 
-    <div class="event-joiners-container">
+    <div class="event-joiners-container" *jhiHasAnyAuthority="'ROLE_ADMIN'" >
       <div class="event-joiners">
         <!-- Pending Joiners (Visible only to logged-in users) -->
         <div class="joiner-list">
@@ -133,7 +126,7 @@
         </div>
 
         <!-- Approved Joiners (Visible only to logged-in users) -->
-        <div class="joiner-list" >
+        <div class="joiner-list"  >
           <h3 class="joiner-title">Onaylanmış Katılımcılar</h3>
 
           <!-- Show message inside "Onaylanmış Katılımcılar" if not logged in -->

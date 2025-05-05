@@ -57,12 +57,6 @@ public class JoinerServiceImpl implements JoinerService {
                 if (joiner.getStatus() != null) {
                     existingJoiner.setStatus(joiner.getStatus());
                 }
-                if (joiner.getPhoto1() != null) {
-                    existingJoiner.setPhoto1(joiner.getPhoto1());
-                }
-                if (joiner.getPhoto1ContentType() != null) {
-                    existingJoiner.setPhoto1ContentType(joiner.getPhoto1ContentType());
-                }
                 if (joiner.getGender() != null) {
                     existingJoiner.setGender(joiner.getGender());
                 }

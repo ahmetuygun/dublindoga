@@ -2,6 +2,7 @@ package com.hiking.dublindoga.web.rest;
 
 import com.hiking.dublindoga.domain.AddJoinerRequest;
 import com.hiking.dublindoga.domain.Event;
+import com.hiking.dublindoga.domain.JoinStatus;
 import com.hiking.dublindoga.repository.EventRepository;
 import com.hiking.dublindoga.service.EventService;
 import com.hiking.dublindoga.service.impl.PendingJoinerListFullException;
@@ -111,6 +112,8 @@ public class EventResource {
 
 
 
+
+
     /**
      * {@code PUT  /events/:id} : Updates an existing event.
      *
@@ -192,7 +195,7 @@ public class EventResource {
     @Cacheable(value = "eventsCache") // Use "eventsCache" as the cache name
     public ResponseEntity<List<Event>> getAllEvents(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
-        @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
+        @RequestParam(name = "eagerload", required = false, defaultValue = "false") boolean eagerload
     ) {
         LOG.debug("REST request to get a page of Events");
         Page<Event> page;
@@ -203,6 +206,15 @@ public class EventResource {
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/checkAttendance/{eventId}/{joinerId}")
+    public ResponseEntity<JoinStatus> checkAttendance(
+        @PathVariable Long eventId, @PathVariable Long joinerId
+    ) {
+        LOG.debug("REST request to check attendance");
+        Optional<JoinStatus> status =eventService.checkAttendance(eventId,joinerId);
+        return ResponseUtil.wrapOrNotFound(status);
     }
 
     /**
@@ -216,6 +228,13 @@ public class EventResource {
     public ResponseEntity<Event> getEvent(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Event : {}", id);
         Optional<Event> event = eventService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(event);
+    }
+
+    @GetMapping("/admin/{id}")
+    public ResponseEntity<Event> getEventForAdmin(@PathVariable("id") Long id) {
+        LOG.debug("REST request to get Event : {}", id);
+        Optional<Event> event = eventRepository.findOneWithEagerRelationships(id);
         return ResponseUtil.wrapOrNotFound(event);
     }
 

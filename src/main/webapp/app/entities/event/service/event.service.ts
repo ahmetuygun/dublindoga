@@ -8,6 +8,7 @@ import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { IEvent, NewEvent } from '../event.model';
+import {JoinStatus} from "../JoinStatus";
 
 export type PartialUpdateEvent = Partial<IEvent> & Pick<IEvent, 'id'>;
 
@@ -16,6 +17,8 @@ type RestOf<T extends IEvent | NewEvent> = Omit<T, 'date'> & {
 };
 
 export type RestEvent = RestOf<IEvent>;
+
+
 
 export type NewRestEvent = RestOf<NewEvent>;
 
@@ -55,7 +58,17 @@ export class EventService {
       .get<RestEvent>(`${this.resourceUrl}/${id}`, { observe: 'response' })
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
+  findForAdmin(id: number): Observable<EntityResponseType> {
+    return this.http
+      .get<RestEvent>(`${this.resourceUrl}/admin/${id}`, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
+  }
 
+  checkAttendance(eventId: number, joinerId: number): Observable<HttpResponse<JoinStatus>> {
+    return this.http.get<JoinStatus>(`${this.resourceUrl}/checkAttendance/${eventId}/${joinerId}`, {
+      observe: 'response',
+    });
+  }
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http

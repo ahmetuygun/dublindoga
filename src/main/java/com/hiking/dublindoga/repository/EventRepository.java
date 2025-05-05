@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -27,4 +28,20 @@ public interface EventRepository extends EventRepositoryWithBagRelationships, Jp
     default Page<Event> findAllWithEagerRelationships(Pageable pageable) {
         return this.fetchBagRelationships(this.findAll(pageable));
     }
+
+    @Query(
+        value = "SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END " +
+            "FROM  rel_event__pending_joiner " +
+            "WHERE event_id = :eventId AND pending_joiner_id  = :joinerId",
+        nativeQuery = true
+    )
+    boolean existsPendingJoinerForEvent(@Param("eventId") Long eventId, @Param("joinerId") Long joinerId);
+
+    @Query(
+        value = "SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END " +
+            "FROM rel_event__approved_joiner " +
+            "WHERE event_id = :eventId AND  approved_joiner_id = :joinerId",
+        nativeQuery = true
+    )
+    boolean existsApprovedJoinerForEvent(@Param("eventId") Long eventId, @Param("joinerId") Long joinerId);
 }
