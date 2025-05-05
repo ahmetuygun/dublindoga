@@ -192,7 +192,6 @@ public class EventResource {
      */
 
     @GetMapping("")
-    @Cacheable(value = "eventsCache") // Use "eventsCache" as the cache name
     public ResponseEntity<List<Event>> getAllEvents(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
         @RequestParam(name = "eagerload", required = false, defaultValue = "false") boolean eagerload

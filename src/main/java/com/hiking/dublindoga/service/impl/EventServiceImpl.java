@@ -16,6 +16,7 @@ import com.hiking.dublindoga.service.MailService;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -111,6 +112,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("eventsCache")
     public Page<Event> findAll(Pageable pageable) {
         LOG.debug("Request to get all Events");
         return eventRepository.findAll(pageable);
