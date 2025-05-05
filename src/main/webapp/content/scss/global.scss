@@ -276,3 +276,17 @@ angular-cli removes postcss-rtl processed inline css, processed rules must be ad
     --bs-btn-disabled-border-color: #3a5a40;
 }
 
+
+.app-loading {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   height: 100vh;
+   background-color: #fff; /* optional */
+ }
+.app-loading img {
+  width: 100px; /* or whatever size suits your GIF */
+}
+
+
+
