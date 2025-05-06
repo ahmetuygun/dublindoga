@@ -112,7 +112,6 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable("eventsCache")
     public Page<Event> findAll(Pageable pageable) {
         LOG.debug("Request to get all Events");
         return eventRepository.findAll(pageable);

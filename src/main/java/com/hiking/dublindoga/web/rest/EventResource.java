@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -125,7 +126,10 @@ public class EventResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    @CacheEvict(value = "eventSingle", key = "#id")
+    @Caching(evict = {
+        @CacheEvict(value = "eventSingle", key = "#id"),
+        @CacheEvict(value = "eventsCache", allEntries = true) // example of another cache
+    })
     public ResponseEntity<Event> updateEvent(@PathVariable(value = "id", required = false) final Long id, @Valid @RequestBody Event event)
         throws URISyntaxException {
         LOG.debug("REST request to update Event : {}, {}", id, event);
@@ -158,7 +162,10 @@ public class EventResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    @CacheEvict(value = "eventSingle", key = "#id")
+    @Caching(evict = {
+        @CacheEvict(value = "eventSingle", key = "#id"),
+        @CacheEvict(value = "eventsCache", allEntries = true) // example of another cache
+    })
     public ResponseEntity<Event> partialUpdateEvent(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody Event event
@@ -192,6 +199,7 @@ public class EventResource {
      */
 
     @GetMapping("")
+    @Cacheable("eventsCache")
     public ResponseEntity<List<Event>> getAllEvents(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
         @RequestParam(name = "eagerload", required = false, defaultValue = "false") boolean eagerload
