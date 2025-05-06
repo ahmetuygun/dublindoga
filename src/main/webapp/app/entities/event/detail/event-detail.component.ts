@@ -58,34 +58,39 @@ export class EventDetailComponent implements OnInit {
       return;
     }
 
-    if (this.accountService.hasAnyAuthority(['ROLE_ADMIN'])) {
+    this.accountService.identity().subscribe(() => {
+      if (this.accountService.hasAnyAuthority(['ROLE_ADMIN'])) {
 
-      this.eventService.findForAdmin(this.eventId).subscribe({
-        next: (response) => {
-          if (response.body) {
-            this.event = response.body;
-            this.isLoading.set(false); // Start loading before registration request
+        this.eventService.findForAdmin(this.eventId).subscribe({
+          next: (response) => {
+            if (response.body) {
+              this.event = response.body;
+              this.processButtonStatus();
+              this.isLoading.set(false); // Start loading before registration request
+            }
+          },
+          error: (err) => {
+            console.error("Error fetching event details:", err);
           }
-        },
-        error: (err) => {
-          console.error("Error fetching event details:", err);
-        }
-      });
-    }else{
-      this.eventService.find(this.eventId).subscribe({
-        next: (response) => {
-          if (response.body) {
-            this.event = response.body;
-            this.processButtonStatus();
+        });
+      }else{
+        this.eventService.find(this.eventId).subscribe({
+          next: (response) => {
+            if (response.body) {
+              this.event = response.body;
+              this.processButtonStatus();
 
-            this.isLoading.set(false); // Start loading before registration request
+              this.isLoading.set(false); // Start loading before registration request
+            }
+          },
+          error: (err) => {
+            console.error("Error fetching event details:", err);
           }
-        },
-        error: (err) => {
-          console.error("Error fetching event details:", err);
-        }
-      });
-    }
+        });
+      }
+    });
+
+
 
   }
 

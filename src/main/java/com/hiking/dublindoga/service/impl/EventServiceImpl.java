@@ -121,16 +121,15 @@ public class EventServiceImpl implements EventService {
     public Page<Event> findAllWithEagerRelationships(Pageable pageable) {
         return eventRepository.findAllWithEagerRelationships(pageable);
     }
-
     public Optional<Event> findOne(Long id) {
         LOG.debug("Request to get Event : {}", id);
-        if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-            .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"))) {
-           return eventRepository.findOneWithEagerRelationships(id);
-        } else {
-            return eventRepository.findById(id);
+        return eventRepository.findById(id);
 
-        }
+    }
+    public Optional<Event> findOneForAdmin(Long id) {
+        LOG.debug("Request to get Event for admin : {}", id);
+        return eventRepository.findOneWithEagerRelationships(id);
+
     }
 
     @Override

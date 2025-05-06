@@ -62,12 +62,14 @@ public interface EventService {
      * @return the entity.
      */
     Optional<Event> findOne(Long id);
+    Optional<Event> findOneForAdmin(Long id);
 
-    /**
-     * Delete the "id" event.
-     *
-     * @param id the id of the entity.
-     */
+
+        /**
+         * Delete the "id" event.
+         *
+         * @param id the id of the entity.
+         */
     void delete(Long id);
 
     void addJoiner(@Valid AddJoinerRequest addJoinerRequest) throws PendingJoinerListFullException;

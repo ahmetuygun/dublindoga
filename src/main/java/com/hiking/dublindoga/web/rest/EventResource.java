@@ -233,7 +233,7 @@ public class EventResource {
     @GetMapping("/admin/{id}")
     public ResponseEntity<Event> getEventForAdmin(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Event : {}", id);
-        Optional<Event> event = eventRepository.findOneWithEagerRelationships(id);
+        Optional<Event> event = eventService.findOneForAdmin(id);
         return ResponseUtil.wrapOrNotFound(event);
     }
 

@@ -52,44 +52,6 @@
           </select>
         </div>
 
-        @let photo1Ref = editForm.get('photo1')!;
-        <div class="mb-3">
-          <label class="form-label" for="field_photo1">Profil Fotoğrafı</label>
-          <div>
-            @if (photo1Ref.value) {
-            <img
-              [src]="'data:' + editForm.get('photo1ContentType')!.value + ';base64,' + photo1Ref.value"
-              style="max-height: 100px"
-              alt="joiner"
-            />
-            }
-            @if (photo1Ref.value) {
-            <div class="form-text text-danger clearfix">
-              <span
-                class="pull-start">{{ editForm.get('photo1ContentType')!.value }}, {{ byteSize(photo1Ref.value!) }}</span>
-              <button
-                type="button"
-                (click)="clearInputImage('photo1', 'photo1ContentType', 'file_photo1')"
-                class="btn btn-secondary btn-xs pull-end"
-              >
-                <fa-icon icon="times"></fa-icon>
-              </button>
-            </div>
-            }
-            <input type="file" id="file_photo1" data-cy="photo1" (change)="setFileData($event, 'photo1', true)"
-                   accept="image/*"/>
-          </div>
-          <input type="hidden" class="form-control" name="photo1" id="field_photo1" data-cy="photo1"
-                 formControlName="photo1"/>
-          <input
-            type="hidden"
-            class="form-control"
-            name="photo1ContentType"
-            id="field_photo1ContentType"
-            formControlName="photo1ContentType"
-          />
-        </div>
-
       </div>
 
       <div class="d-flex justify-content-end">
@@ -98,8 +60,7 @@
           id="save-entity"
           data-cy="entityCreateSaveButton"
           [disabled]="editForm.invalid || isSaving"
-          class="btn btn-primary"
-        >
+          class="btn btn-primary">
           <fa-icon icon="save"></fa-icon>&nbsp;<span>Kaydet</span>
         </button>
       </div>
